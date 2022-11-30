@@ -32,7 +32,7 @@ Assuming each day's solutions follow the above directory structure and naming co
 ```
 Where DayNumber is the day number, like "1" for Day01, and ChallengeNumber is the challenge number, typically "1" or "2".  You can optionally specify an InputFileName (just the file name, it will look for the file in the Day directory), but it will default to a file named "input.txt" in the Day solution directory.
 
-For each new Day, you can simply copy the "template" [dayNN](./src/main/dayNN) package, and rename as the appropriate day, or follow these destructions...
+For each new Day, you can simply copy the "template" [dayNN](./src/main/kotlin/dayNN) package, and rename as the appropriate day, or follow these destructions...
 - [ ] Create a dayNN directory
 - [ ] In the dayNN directory, create a Part1.kt for the first challenge. The file should implement the `Challenge` interface, with implementation for the processInput function. You may add other functions as needed, but only the processInput, accepting an array of lines read from the input file, is required.
 ```kotlin
