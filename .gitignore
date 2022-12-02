@@ -25,6 +25,7 @@ hs_err_pid*
 .idea
 .gradle
 build
+bin
 **/day*/input.txt
 !**/dayNN/input.txt
 !**/gradle/**
