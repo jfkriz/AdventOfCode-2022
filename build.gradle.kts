@@ -26,12 +26,8 @@ tasks {
         }
     }
 
-    sourceSets["main"].resources {
-        srcDirs("src/main/kotlin")
+    sourceSets["test"].resources {
+        srcDirs("src/test/kotlin")
         exclude("**/*.kt")
     }
-}
-
-application {
-    mainClass.set("AdventOfCodeKt")
 }
