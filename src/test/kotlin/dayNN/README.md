@@ -17,3 +17,5 @@ $ ./gradlew test --tests="day02**Part 2**Real**"
 View the source of the Advent of Code page once you solve the puzzles, 
 convert the source to markdown using something like [CodeBeautify HTML-to-Markdown](https://codebeautify.org/html-to-markdown),
 then replace this README's contents with that markdown. This makes it easy to go back and review your solutions in the context of the actual problem. Some of these can be pretty obscure...
+
+When you commit your solution, be careful to not commit your input.txt. Everyone's input is supposed to be different, but [the author requests](https://www.reddit.com/r/adventofcode/comments/e7khy8/comment/fa13hb9/?utm_source=share&utm_medium=web2x&context=3) that we don't post our input. The [.gitignore](../../../../.gitignore) should take care of that for you, but doesn't hurt to double-check.
