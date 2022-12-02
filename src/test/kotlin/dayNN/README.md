@@ -1,7 +1,7 @@
 # Day Template
 
 ## Usage
-Copy the contents of this package to a new "daynn" package, then get to work modifying the [TodayTest.kt]() as needed.
+Copy the contents of this package to a new "daynn" package, then get to work modifying the [TodayTest.kt](TodayTest.kt) as needed.
 
 Run the tests in the IDE, or with commands like:
 ```shell
