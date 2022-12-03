@@ -18,6 +18,7 @@ tasks {
     test {
         useJUnitPlatform()
         testLogging.events = mutableSetOf(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.STANDARD_OUT, TestLogEvent.STANDARD_ERROR)
+        exclude("**/dayNN/**")
     }
 
     withType<KotlinCompile> {

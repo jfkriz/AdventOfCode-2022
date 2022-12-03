@@ -1,6 +1,7 @@
 package day01
 
 import Helpers
+import groupInputLines
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
@@ -37,17 +38,12 @@ class CalorieCounterTest : Helpers() {
 }
 
 class Elves(data: List<String>) {
-    private var elfCalories = data.fold(mutableListOf(Elf())) { elves, e ->
-        if(e.isBlank()) {
-            elves.add(Elf())
-        } else {
-            elves.last().foodItems.add(Integer.parseInt(e))
-        }
-        elves
+    private var elfCalories = data.groupInputLines().map {
+        Elf(it.map(Integer::parseInt))
     }
 
     fun findGreatestTotalCalories(): Int {
-        return elfCalories.maxByOrNull { it.totalCalories }!!.totalCalories
+        return elfCalories.maxOf { it.totalCalories }
     }
 
     fun findTopThreeTotalCalories(): Int {
@@ -55,7 +51,7 @@ class Elves(data: List<String>) {
     }
 }
 
-data class Elf(val foodItems: MutableList<Int> = mutableListOf()) {
+data class Elf(val foodItems: List<Int>) {
     val totalCalories: Int
         get() = this.foodItems.sum()
 }
