@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import util.DataFiles
-import util.extensions.groupInputLines
+import util.extensions.chunked
 
 @DisplayName("Day 01 - Calorie Counter")
 @TestMethodOrder(OrderAnnotation::class)
@@ -38,7 +38,7 @@ class CalorieCounterTest : DataFiles() {
 }
 
 class Elves(data: List<String>) {
-    private var elfCalories = data.groupInputLines().map {
+    private var elfCalories = data.chunked().map {
         Elf(it.map(Integer::parseInt))
     }
 
