@@ -21,3 +21,16 @@ fun List<String>.chunked(delimiter: String = ""): List<List<String>> =
         }
         groups
     }
+
+/**
+ * Given a list of Strings, make sure all strings are the same length, and pad them with the given [padChar] if not.
+ * This is mainly here because IntelliJ will trim trailing spaces from lines in files by default, so input lines
+ * that would otherwise be the same length end up not being the proper length. This is important if you expect to
+ * split an input line on a certain delimiter or at a certain chunk size, and then turn that into a [util.collections.Matrix],
+ * since the Matrix requires all input lines to be equal length.
+ */
+fun List<String>.padToMaxLength(padChar: Char): List<String> = with(this.maxOf { it.length }) {
+    map {
+        it.padEnd(this, padChar)
+    }
+}
