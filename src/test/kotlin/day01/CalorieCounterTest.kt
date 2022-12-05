@@ -1,13 +1,13 @@
 package day01
 
-import util.DataFiles
-import util.extensions.groupInputLines
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+import util.DataFiles
+import util.extensions.groupInputLines
 
 @DisplayName("Day 01 - Calorie Counter")
 @TestMethodOrder(OrderAnnotation::class)
@@ -55,4 +55,3 @@ data class Elf(val foodItems: List<Int>) {
     val totalCalories: Int
         get() = this.foodItems.sum()
 }
-

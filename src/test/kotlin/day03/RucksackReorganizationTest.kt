@@ -1,6 +1,5 @@
 package day03
 
-import util.DataFiles
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+import util.DataFiles
 
 @DisplayName("Day 03 - Rucksack Reorganization")
 @TestMethodOrder(OrderAnnotation::class)
@@ -81,4 +81,3 @@ data class Item(val value: Char) {
             }
         }
 }
-

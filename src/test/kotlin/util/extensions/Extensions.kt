@@ -5,7 +5,7 @@ fun IntRange.encloses(other: IntRange) =
 
 fun IntRange.overlaps(other: IntRange) =
     (this.contains(other.first) || this.contains(other.last)) ||
-            (other.contains(this.first) || other.contains(this.last))
+        (other.contains(this.first) || other.contains(this.last))
 
 /**
  * Groups the lines of input into lists, where groups of input lines are separated by a blank line.

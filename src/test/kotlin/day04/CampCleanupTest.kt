@@ -1,14 +1,14 @@
 package day04
 
-import util.DataFiles
-import util.extensions.encloses
-import util.extensions.overlaps
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+import util.DataFiles
+import util.extensions.encloses
+import util.extensions.overlaps
 
 @DisplayName("Day 04 - Camp Cleanup")
 @TestMethodOrder(OrderAnnotation::class)
@@ -51,8 +51,8 @@ class CampCleanup(data: List<String>) {
 }
 
 class SectionAssignment(first: String, second: String) {
-    private val first: IntRange = Integer.parseInt(first.split("-")[0]) .. Integer.parseInt(first.split("-")[1])
-    private val second: IntRange = Integer.parseInt(second.split("-")[0]) .. Integer.parseInt(second.split("-")[1])
+    private val first: IntRange = Integer.parseInt(first.split("-")[0])..Integer.parseInt(first.split("-")[1])
+    private val second: IntRange = Integer.parseInt(second.split("-")[0])..Integer.parseInt(second.split("-")[1])
 
     fun assignmentsAreFullyRedundant(): Boolean =
         first.encloses(second) || second.encloses(first)
@@ -60,4 +60,3 @@ class SectionAssignment(first: String, second: String) {
     fun assignmentsArePartiallyRedundant(): Boolean =
         first.overlaps(second)
 }
-

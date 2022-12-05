@@ -1,12 +1,12 @@
 package day02
 
-import util.DataFiles
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+import util.DataFiles
 
 @DisplayName("Day 02 - Rock, Paper, Scissors")
 @TestMethodOrder(OrderAnnotation::class)
@@ -83,13 +83,13 @@ enum class Shape(val score: Int, val code: String, val opponentCode: String) {
 
     companion object {
         fun fromOpponentCode(c: String) = Shape.values().find { it.opponentCode == c }
-            ?: throw IllegalArgumentException("Invalid value '${c}' for Shape")
+            ?: throw IllegalArgumentException("Invalid value '$c' for Shape")
 
         fun fromCode(c: String) =
-            Shape.values().find { it.code == c } ?: throw IllegalArgumentException("Invalid value '${c}' for Shape")
+            Shape.values().find { it.code == c } ?: throw IllegalArgumentException("Invalid value '$c' for Shape")
 
         fun fromOutcomeCode(outcome: String, opponent: Shape) =
-            when(outcome) {
+            when (outcome) {
                 "X" -> opponent.loser
                 "Y" -> opponent.draw
                 "Z" -> opponent.winner
@@ -98,9 +98,9 @@ enum class Shape(val score: Int, val code: String, val opponentCode: String) {
     }
 
     fun beats(other: Shape): Boolean {
-        return this == Rock && other == Scissors
-                || this == Scissors && other == Paper
-                || this == Paper && other == Rock
+        return this == Rock && other == Scissors ||
+            this == Scissors && other == Paper ||
+            this == Paper && other == Rock
     }
 
     val winner: Shape
@@ -121,5 +121,4 @@ enum class Shape(val score: Int, val code: String, val opponentCode: String) {
 
     val draw: Shape
         get() = this
-
 }

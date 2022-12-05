@@ -1,12 +1,12 @@
 package dayNN
 
-import util.DataFiles
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+import util.DataFiles
 
 @DisplayName("Day NN - Description")
 @TestMethodOrder(OrderAnnotation::class)
@@ -45,4 +45,3 @@ class Solver(@Suppress("UNUSED_PARAMETER") data: List<String>) {
         return 90210
     }
 }
-
