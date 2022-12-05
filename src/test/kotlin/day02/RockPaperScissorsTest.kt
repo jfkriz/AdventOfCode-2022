@@ -1,6 +1,6 @@
 package day02
 
-import Helpers
+import util.DataFiles
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.TestMethodOrder
 
 @DisplayName("Day 02 - Rock, Paper, Scissors")
 @TestMethodOrder(OrderAnnotation::class)
-class RockPaperScissorsTest : Helpers() {
+class RockPaperScissorsTest : DataFiles() {
     @Test
     @Order(1)
     fun `Part 1 Sample Input should return 15`() {

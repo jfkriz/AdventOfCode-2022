@@ -1,6 +1,6 @@
 package dayNN
 
-import Helpers
+import util.DataFiles
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.TestMethodOrder
 
 @DisplayName("Day NN - Description")
 @TestMethodOrder(OrderAnnotation::class)
-class TodayTest : Helpers() {
+class TodayTest : DataFiles() {
     @Test
     @Order(1)
     fun `Part 1 Sample Input should return 42`() {

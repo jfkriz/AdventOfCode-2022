@@ -3,6 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     kotlin("jvm") version "1.7.21"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     application
 }
 

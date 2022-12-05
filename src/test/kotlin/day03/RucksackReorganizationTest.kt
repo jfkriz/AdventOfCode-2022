@@ -1,6 +1,6 @@
 package day03
 
-import Helpers
+import util.DataFiles
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.TestMethodOrder
 
 @DisplayName("Day 03 - Rucksack Reorganization")
 @TestMethodOrder(OrderAnnotation::class)
-class RucksackReorganizationTest : Helpers() {
+class RucksackReorganizationTest : DataFiles() {
     @Test
     @Order(1)
     fun `Part 1 Sample Input should return 157`() {

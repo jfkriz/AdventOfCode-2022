@@ -1,7 +1,7 @@
 package day01
 
-import Helpers
-import groupInputLines
+import util.DataFiles
+import util.extensions.groupInputLines
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.TestMethodOrder
 
 @DisplayName("Day 01 - Calorie Counter")
 @TestMethodOrder(OrderAnnotation::class)
-class CalorieCounterTest : Helpers() {
+class CalorieCounterTest : DataFiles() {
     @Test
     @Order(1)
     fun `Part 1 Sample Input should return 24000`() {

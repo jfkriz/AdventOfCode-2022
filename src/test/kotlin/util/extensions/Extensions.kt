@@ -1,16 +1,11 @@
-import java.util.stream.Collectors
+package util.extensions
 
-open class Helpers {
-    fun loadInput(): List<String> = loadFile("input.txt")
+fun IntRange.encloses(other: IntRange) =
+    this.contains(other.first) && this.contains(other.last)
 
-    fun loadSampleInput(): List<String> = loadFile("test-input.txt")
-
-    private fun loadFile(fileName: String) =
-        javaClass.classLoader.getResourceAsStream("${javaClass.name.split('.')[0]}/$fileName")?.bufferedReader()?.lines()?.collect(
-            Collectors.toList()
-        )
-            ?: throw IllegalStateException("Can't load data file $fileName")
-}
+fun IntRange.overlaps(other: IntRange) =
+    (this.contains(other.first) || this.contains(other.last)) ||
+            (other.contains(this.first) || other.contains(this.last))
 
 /**
  * Groups the lines of input into lists, where groups of input lines are separated by a blank line.
