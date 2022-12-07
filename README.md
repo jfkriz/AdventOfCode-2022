@@ -2,7 +2,7 @@
 My solutions for the [Advent of Code - 2022](https://adventofcode.com/2022)
 
 ## 🌟 My Awesome Badges! 🌟
-![Build & Test](https://github.com/jfkriz/AdventOfCode-2022/actions/workflows/RunTests.yml/badge.svg)
+![Build & Test](https://github.com/jfkriz/AdventOfCode-2022/actions/workflows/RunTests.yaml/badge.svg)
 
 ![](https://img.shields.io/badge/day%20📅-00-blue)![](https://img.shields.io/badge/stars%20⭐-00-yellow)![](https://img.shields.io/badge/days%20completed-00-red)
 
