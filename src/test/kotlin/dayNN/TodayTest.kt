@@ -27,13 +27,13 @@ class TodayTest : DataFiles() {
     @Test
     @Order(3)
     fun `Part 2 Sample Input should return 90210`() {
-        assertEquals(90210, solver.solvePartTwo())
+        assertEquals(90210, sampleSolver.solvePartTwo())
     }
 
     @Test
     @Order(2)
     fun `Part 1 Real Input should return 42`() {
-        assertEquals(42, sampleSolver.solvePartOne())
+        assertEquals(42, solver.solvePartOne())
     }
 
     @Test
