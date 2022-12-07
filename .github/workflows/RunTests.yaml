@@ -17,5 +17,11 @@ jobs:
         uses: gradle/gradle-build-action@v2.3.3
         with:
           arguments: test
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: JUnit Tests
+          reporter: java-junit
 
 
