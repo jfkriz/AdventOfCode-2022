@@ -1,6 +1,7 @@
 package day05
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
@@ -8,10 +9,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import util.DataFiles
 import util.collections.Matrix
-import util.extensions.chunked
-import util.extensions.padToMaxLength
 import util.collections.popN
 import util.collections.pushN
+import util.extensions.chunked
+import util.extensions.padToMaxLength
 import java.util.Stack
 
 @DisplayName("Day 05 - Supply Stacks")
@@ -43,7 +44,7 @@ class SupplyStacksTest : DataFiles() {
         assertEquals("PGSQBFLDP", SupplyStacks(loadInput()).solvePartTwo())
     }
 
-//    @Disabled
+    @Disabled
     @Test
     @Order(99)
     fun `Stack Initialization should produce expected result for sample data`() {
