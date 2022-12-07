@@ -1,6 +1,7 @@
 package day06
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
@@ -12,7 +13,7 @@ import util.DataFiles
 @TestMethodOrder(OrderAnnotation::class)
 class TuningTroubleTest : DataFiles() {
     private val sampleTuner = Tuner(loadSampleInput())
-    private val tuner = Tuner(loadInput())
+    private val tuner by lazy { Tuner(loadInput()) }
 
     @Test
     @Order(1)
