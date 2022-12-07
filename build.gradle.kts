@@ -19,7 +19,14 @@ tasks {
     test {
         useJUnitPlatform()
         testLogging.events = mutableSetOf(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.STANDARD_OUT, TestLogEvent.STANDARD_ERROR)
-        exclude("**/dayNN/**")
+        filter {
+            // Don't run tests on the "template" classes
+            excludeTestsMatching("dayNN.*")
+            // Don't run tests on real input during CI build, since those will fail (personal input data for problems is not checked in to github)
+            if (System.getenv("CI") == "true") {
+                excludeTestsMatching("*Real Input*")
+            }
+        }
     }
 
     withType<KotlinCompile> {
