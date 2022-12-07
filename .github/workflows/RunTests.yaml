@@ -23,6 +23,6 @@ jobs:
         with:
           name: JUnit Tests
           reporter: java-junit
-          path: build/reports/test-results/test/TEST-*.xml
+          path: build/test-results/test/TEST-*.xml
 
 
