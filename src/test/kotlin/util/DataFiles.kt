@@ -7,6 +7,8 @@ open class DataFiles {
 
     fun loadSampleInput(): List<String> = loadFile("test-input.txt")
 
+    fun loadOtherInput(fileName: String) = loadFile(fileName)
+
     private fun loadFile(fileName: String) =
         javaClass.classLoader.getResourceAsStream("${javaClass.name.split('.')[0]}/$fileName")?.bufferedReader()
             ?.lines()?.collect(
