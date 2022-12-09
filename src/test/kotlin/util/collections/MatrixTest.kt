@@ -46,4 +46,25 @@ class MatrixTest {
         val transposed = fixture.transpose()
         assertEquals(expected, transposed)
     }
+
+    @Test
+    fun `Should get proper row`() {
+        val data = listOf(
+            listOf(10, 11, 12, 13),
+            listOf(20, 21, 22, 23),
+            listOf(30, 31, 32, 33)
+        )
+
+        assertEquals(listOf(20, 21, 22, 23), Matrix(data).row(1))
+    }
+    @Test
+    fun `Should get proper column`() {
+        val data = listOf(
+            listOf(10, 11, 12, 13),
+            listOf(20, 21, 22, 23),
+            listOf(30, 31, 32, 33)
+        )
+
+        assertEquals(listOf(11, 21, 31), Matrix(data).column(1))
+    }
 }

@@ -1,6 +1,6 @@
 package util.collections
 
-class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
+open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
     private var grid = validate(initialContents).map { it }
 
     /**
@@ -48,6 +48,19 @@ class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
 
         return contents
     }
+
+    val width: Int
+        get() = grid[0].size
+
+    val height: Int
+        get() = grid.size
+
+    fun row(rowNum: Int): List<T> = grid[rowNum]
+
+    fun column(colNum: Int): List<T> =
+        grid.map {
+            it[colNum]
+        }
 
     override fun iterator() = grid.iterator()
 
