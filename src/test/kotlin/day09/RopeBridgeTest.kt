@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import util.DataFiles
-import kotlin.math.abs
-import kotlin.math.sqrt
 
 @DisplayName("Day 09 - Rope Bridge")
 @TestMethodOrder(OrderAnnotation::class)
@@ -52,84 +50,53 @@ class RopeBridgeTest : DataFiles() {
 class RopeBridge(data: List<String>) {
     private val instructions = data.map { Instruction(it) }
 
-    fun solvePartOne(): Int {
-        val head = Position(0, 0)
-        val tail = head.copy()
+    fun solvePartOne() = calculateTailPositions(instructions, 2).size
+
+    fun solvePartTwo() = calculateTailPositions(instructions, 10).size
+
+    private fun calculateTailPositions(instructions: List<Instruction>, ropeLength: Int): Set<Position> {
         val tailVisited = mutableSetOf<Position>()
-
-        instructions.forEach {
-            val result = it.move(head, tail)
-            tailVisited.addAll(result)
-        }
-
-        return tailVisited.size
-    }
-
-    fun solvePartTwo(): Int {
-        val tailVisited = mutableSetOf<Position>()
-        val head = Position(0, 0)
-        val knots = listOf(
-            Position(0, 0),
-            Position(0, 0),
-            Position(0, 0),
-            Position(0, 0),
-            Position(0, 0),
-            Position(0, 0),
-            Position(0, 0),
-            Position(0, 0),
+        val rope = Array(ropeLength) {
             Position(0, 0)
-        )
+        }.asList()
 
         instructions.forEach {
-            tailVisited.addAll(it.move(head, knots))
-        }
+            it.execute { _, direction ->
+                rope[0].move(direction)
+                rope.windowed(2).forEachIndexed { index, segment ->
+                    val head = segment[0]
+                    val tail = segment[1]
+                    if (!(tail.isSame(head) || tail.isNeighboring(head))) {
+                        val xMove = (head.x - tail.x).calculateMove()
+                        val yMove = (head.y - tail.y).calculateMove()
+                        tail.move(xMove, yMove)
+                    }
 
-        return tailVisited.size
+                    if (index == ropeLength - 2) {
+                        tailVisited.add(rope.last().copy())
+                    }
+                }
+            }
+        }
+        return tailVisited
     }
+
+    private fun Int.calculateMove() =
+        when {
+            this > 0 -> 1
+            this < 0 -> -1
+            else -> 0
+        }
 }
 
 class Instruction(line: String) {
-    private val direction = Direction.fromCode(line.split(" ")[0])
-    private val count = Integer.parseInt(line.split(" ")[1])
+    val direction = Direction.fromCode(line.split(" ")[0])
+    val count = Integer.parseInt(line.split(" ")[1])
 
-    fun move(head: Position, tail: Position): Set<Position> {
-        val tailPositions = mutableSetOf(tail.copy())
-        (0 until count).forEach { _ ->
-            when (direction) {
-                Direction.Up -> head.y--
-                Direction.Down -> head.y++
-                Direction.Left -> head.x--
-                Direction.Right -> head.x++
-            }
-
-            val newTail = tail.moveAdjacentTo(head)
-            tail.x = newTail.x
-            tail.y = newTail.y
-            tailPositions.add(newTail)
+    fun execute(func: (index: Int, direction: Direction) -> Unit) {
+        (0 until count).forEach {
+            func(it, direction)
         }
-        return tailPositions
-    }
-
-    fun move(head: Position, knots: List<Position>): Set<Position> {
-        val lastKnotPositions = mutableSetOf(knots.last().copy())
-        (0 until count).forEach { _ ->
-            when (direction) {
-                Direction.Up -> head.y--
-                Direction.Down -> head.y++
-                Direction.Left -> head.x--
-                Direction.Right -> head.x++
-            }
-
-            var prevKnot = head.copy()
-            knots.forEach {
-                val newKnot = it.moveKnotAdjacentTo(prevKnot)
-                it.x = newKnot.x
-                it.y = newKnot.y
-                prevKnot = newKnot.copy()
-            }
-            lastKnotPositions.add(knots.last().copy())
-        }
-        return lastKnotPositions
     }
 }
 
@@ -146,65 +113,32 @@ enum class Direction(val code: String) {
 }
 
 data class Position(var x: Int, var y: Int) {
-    // Been a long time, had to search for the formula to find the distance between the two points...
-    // https://stackoverflow.com/questions/15179481/how-to-calculate-distance-between-2-points-in-a-2d-matrix#:~:text=This%20length%20can%20be%20computed,Euclidian%20distance%20between%20the%20points.
-    private fun calculateDistance(other: Position) = Distance(x - other.x, y - other.y)
+    fun move(direction: Direction): Position =
+        when (direction) {
+            Direction.Up -> y--
+            Direction.Down -> y++
+            Direction.Left -> x--
+            Direction.Right -> x++
+        }.let { this }
 
-    fun moveAdjacentTo(other: Position): Position {
-        val distance = other.calculateDistance(this)
-        return if (!distance.isAdjacent) {
-            val newX = if (distance.xDiff > 0) {
-                x + 1
-            } else if (distance.xDiff < 0) {
-                x - 1
-            } else {
-                x
-            }
-            val newY = if (distance.yDiff > 0) {
-                y + 1
-            } else if (distance.yDiff < 0) {
-                y - 1
-            } else {
-                y
-            }
-
-            Position(newX, newY)
-        } else {
-            copy()
+    fun move(x: Int, y: Int): Position =
+        this.apply {
+            this.x += x
+            this.y += y
         }
+
+    fun isSame(other: Position) = equals(other)
+
+    fun isNeighboring(other: Position) = listOf(
+        Position(x, y - 1),
+        Position(x + 1, y),
+        Position(x, y + 1),
+        Position(x - 1, y),
+        Position(x - 1, y - 1),
+        Position(x + 1, y - 1),
+        Position(x + 1, y + 1),
+        Position(x - 1, y + 1)
+    ).any {
+        it == other
     }
-
-    fun moveKnotAdjacentTo(other: Position): Position {
-        val distance = other.calculateDistance(this)
-        return if (!distance.shiftedOneInEachDirection && distance.value > 1.0) {
-            val newX = if (distance.xDiff > 0) {
-                x + 1
-            } else if (distance.xDiff < 0) {
-                x - 1
-            } else {
-                x
-            }
-            val newY = if (distance.yDiff > 0) {
-                y + 1
-            } else if (distance.yDiff < 0) {
-                y - 1
-            } else {
-                y
-            }
-            Position(newX, newY)
-        } else {
-            copy()
-        }
-    }
-}
-
-data class Distance(val xDiff: Int, val yDiff: Int) {
-    val value: Double
-        get() = sqrt((xDiff * xDiff).toDouble() + (yDiff * yDiff).toDouble())
-
-    val isAdjacent: Boolean
-        get() = (abs(xDiff) == abs(yDiff)) || (value <= 1.0)
-
-    val shiftedOneInEachDirection: Boolean
-        get() = abs(xDiff) == 1 && abs(yDiff) == 1
 }
