@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import util.DataFiles
+import util.Direction
+import util.Point
 
 @DisplayName("Day 09 - Rope Bridge")
 @TestMethodOrder(OrderAnnotation::class)
@@ -42,7 +44,6 @@ class RopeBridgeTest : DataFiles() {
     @Test
     @Order(4)
     fun `Part 2 Real Input should return 2661`() {
-        // 2639 - too low
         assertEquals(2661, ropeBridge.solvePartTwo())
     }
 }
@@ -54,10 +55,10 @@ class RopeBridge(data: List<String>) {
 
     fun solvePartTwo() = calculateTailPositions(instructions, 10).size
 
-    private fun calculateTailPositions(instructions: List<Instruction>, ropeLength: Int): Set<Position> {
-        val tailVisited = mutableSetOf<Position>()
+    private fun calculateTailPositions(instructions: List<Instruction>, ropeLength: Int): Set<Point<Int>> {
+        val tailVisited = mutableSetOf<Point<Int>>()
         val rope = Array(ropeLength) {
-            Position(0, 0)
+            Point(0, 0, it)
         }.asList()
 
         instructions.forEach {
@@ -66,9 +67,8 @@ class RopeBridge(data: List<String>) {
                 rope.windowed(2).forEachIndexed { index, segment ->
                     val head = segment[0]
                     val tail = segment[1]
-                    if (!(tail.isSame(head) || tail.isNeighboring(head))) {
-                        val xMove = (head.x - tail.x).calculateMove()
-                        val yMove = (head.y - tail.y).calculateMove()
+                    if (!tail.isSameLocation(head) && !tail.isNeighboringLocation(head)) {
+                        val (xMove, yMove) = head.differenceWith(tail).toList().map { n -> n.calculateMove() }
                         tail.move(xMove, yMove)
                     }
 
@@ -90,55 +90,21 @@ class RopeBridge(data: List<String>) {
 }
 
 class Instruction(line: String) {
-    val direction = Direction.fromCode(line.split(" ")[0])
-    val count = Integer.parseInt(line.split(" ")[1])
+    private val direction = line.split(" ")[0].toDirection()
+    private val count = Integer.parseInt(line.split(" ")[1])
 
     fun execute(func: (index: Int, direction: Direction) -> Unit) {
         (0 until count).forEach {
             func(it, direction)
         }
     }
-}
 
-enum class Direction(val code: String) {
-    Up("U"),
-    Down("D"),
-    Left("L"),
-    Right("R");
-
-    companion object {
-        fun fromCode(c: String): Direction =
-            Direction.values().find { it.code == c } ?: throw IllegalArgumentException("Invalid direction code '$c'")
-    }
-}
-
-data class Position(var x: Int, var y: Int) {
-    fun move(direction: Direction): Position =
-        when (direction) {
-            Direction.Up -> y--
-            Direction.Down -> y++
-            Direction.Left -> x--
-            Direction.Right -> x++
-        }.let { this }
-
-    fun move(x: Int, y: Int): Position =
-        this.apply {
-            this.x += x
-            this.y += y
+    private fun String.toDirection(): Direction =
+        when (this) {
+            "U" -> Direction.Up
+            "D" -> Direction.Down
+            "L" -> Direction.Left
+            "R" -> Direction.Right
+            else -> throw IllegalArgumentException("Invalid code '$this' for Direction")
         }
-
-    fun isSame(other: Position) = equals(other)
-
-    fun isNeighboring(other: Position) = listOf(
-        Position(x, y - 1),
-        Position(x + 1, y),
-        Position(x, y + 1),
-        Position(x - 1, y),
-        Position(x - 1, y - 1),
-        Position(x + 1, y - 1),
-        Position(x + 1, y + 1),
-        Position(x - 1, y + 1)
-    ).any {
-        it == other
-    }
 }
