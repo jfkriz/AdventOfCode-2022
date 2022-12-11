@@ -56,6 +56,11 @@ class Solver(private val data: List<String>) {
         // calculate the product of all their individual divisors, we can use that as a common "translation"
         // when testing the values. So get the product, then below, we'll mod the calculated item value by this
         // product, preventing it from growing too large to exceed the Long data type.
+        //
+        // I initially found the formula for calculating the least common multiple of the divisors, but it turns
+        // out that the LCM is actually the product of them all... Not sure if this will work for everyone's input,
+        // but assuming all the inputs have about the same number of monkeys, and assuming the test divisors are
+        // all relatively small (2-digit numbers or less), this should be fine.
         val valueTranslation = monkeys.fold(1L) { acc, monkey -> acc * monkey.testDivisor }
 
         return solve(10000) {
