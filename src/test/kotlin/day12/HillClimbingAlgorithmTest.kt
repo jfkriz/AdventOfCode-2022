@@ -78,12 +78,12 @@ class Solver(data: List<String>) {
     }
 
     fun solvePartOne() =
-        heightMap.findPointDistances(end, allowDiagonal = false) { currentPoint, neighboringPoint ->
+        heightMap.findShortestPath(start, end, allowDiagonal = false) { currentPoint, neighboringPoint ->
             currentPoint.value - neighboringPoint.value <= 1
-        }[start]!!
+        }.size - 1
 
     fun solvePartTwo() =
-        heightMap.findPointDistances(end, allowDiagonal = false) { currentPoint, neighboringPoint ->
+        heightMap.findAllPaths(end, allowDiagonal = false) { currentPoint, neighboringPoint ->
             currentPoint.value - neighboringPoint.value <= 1
-        }.filter { it.key.value == 'a'.code }.minBy { it.value }.value
+        }.filter { it.key.value == 'a'.code }.minBy { it.value.size }.value.size - 1
 }

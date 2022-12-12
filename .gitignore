@@ -29,3 +29,4 @@ bin
 **/day*/input.txt
 !**/dayNN/input.txt
 !**/gradle/**
+*.hprof

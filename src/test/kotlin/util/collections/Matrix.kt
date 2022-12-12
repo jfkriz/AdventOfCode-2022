@@ -34,25 +34,39 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
      * @param pointFilter an optional function to further inspect the value of a potential neighboring point. This is useful if you have a weighted graph, or otherwise want to only move in a direction under certain criteria.
      * @return a Map of Point to Int values, indicating the distance from the end for each starting point
      */
-    fun findPointDistances(end: Point<T>, allowDiagonal: Boolean = false, pointFilter: (currentPoint: Point<T>, neighboringPoint: Point<T>) -> Boolean = { _, _ -> true }): Map<Point<T>, Int> {
-        val queue = LinkedList(listOf(end to 0)) as Queue<Pair<Point<T>, Int>>
+    fun findAllPaths(end: Point<T>, allowDiagonal: Boolean = false, pointFilter: (currentPoint: Point<T>, neighboringPoint: Point<T>) -> Boolean = { _, _ -> true }): Map<Point<T>, List<Point<T>>> {
+        val queue = LinkedList(listOf(end to Path(end))) as Queue<Pair<Point<T>, Path<T>>>
 
-        val pointDistances = mutableMapOf(end to 0)
+        val pointDistances = mutableMapOf(end to Path(end))
 
         while (queue.any()) {
-            val (point, distance) = queue.remove()
+            val (point, path) = queue.remove()
             queue.addAll(
                 getNeighboringPoints(point.x, point.y, allowDiagonal) { current, neighbor ->
                     pointFilter(current, neighbor) && !pointDistances.containsKey(neighbor)
                 }.map {
-                    pointDistances[it.value] = distance + 1
-                    it.value to distance + 1
+                    val newPath = path.clone().apply {
+                        add(it.value.copy())
+                    }
+                    pointDistances[it.value] = newPath
+                    it.value to newPath
                 }
             )
         }
 
-        return pointDistances
+        return pointDistances.map { it.key to it.value.points.reversed() }.toMap()
     }
+
+    /**
+     * A Breadth-First Search to find the shortest distance from start to end. This will return a List of Points, in order, to follow to get from start to end.
+     * @param start the starting point where we want to traverse from
+     * @param end the ending point where we want to traverse to
+     * @param allowDiagonal indicates whether diagonal movement is allowed. By default, this is `false`, only allowing movement up, down, left, and right
+     * @param pointFilter an optional function to further inspect the value of a potential neighboring point. This is useful if you have a weighted graph, or otherwise want to only move in a direction under certain criteria.
+     * @return a List of Points, from start to end, indicating the steps to take. This will be an empty list of no path can be found from start to end.
+     */
+    fun findShortestPath(start: Point<T>, end: Point<T>, allowDiagonal: Boolean = false, pointFilter: (currentPoint: Point<T>, neighboringPoint: Point<T>) -> Boolean = { _, _ -> true }) =
+        findAllPaths(end, allowDiagonal, pointFilter).filter { it.key == start }.values.first()
 
     /**
      * Turn this matrix on it's side, and return the new representation. By transposing, the first row becomes the first column,
@@ -123,5 +137,20 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
 
     override fun hashCode(): Int {
         return grid.hashCode()
+    }
+}
+
+internal data class Path<T>(val start: Point<T>) : Cloneable {
+    private val _points = linkedSetOf(start)
+
+    val points: List<Point<T>>
+        get() = _points.toList()
+
+    fun add(point: Point<T>) = _points.add(point)
+
+    public override fun clone() = Path(this.start).apply {
+        this@Path.points.map { it.copy() }.forEach {
+            add(it)
+        }
     }
 }
