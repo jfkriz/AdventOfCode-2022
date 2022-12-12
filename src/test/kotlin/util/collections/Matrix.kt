@@ -1,7 +1,40 @@
 package util.collections
 
+import util.Direction
+import util.Point
+import java.util.LinkedList
+import java.util.Queue
+
 open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
     private var grid = validate(initialContents).map { it }
+
+    fun getNeighboringPoints(row: Int, col: Int, includeDiagonal: Boolean = false, filter: (currentPoint: Point<T>, neighboringPoint: Point<T>) -> Boolean = { _, _ -> true }): Map<Direction, Point<T>> =
+        Direction.values().filter { includeDiagonal || !it.diagonal }.filter {
+            (row + it.yOffset < height) && (row + it.yOffset >= 0) &&
+                (col + it.xOffset < width) && (col + it.xOffset >= 0)
+        }.associateWith {
+            pointAt(row + it.yOffset, col + it.xOffset)
+        }.filter {
+            filter(pointAt(row, col), it.value)
+        }
+
+    fun findPointDistances(end: Point<T>, allowDiagonal: Boolean = false, pointFilter: (currentPoint: Point<T>, neighboringPoint: Point<T>) -> Boolean = { _, _ -> true }): Map<Point<T>, Int> {
+        val queue = LinkedList(listOf(end to 0)) as Queue<Pair<Point<T>, Int>>
+
+        val pointDistances = mutableMapOf(end to 0)
+
+        while (queue.any()) {
+            val (point, distance) = queue.remove()
+            getNeighboringPoints(point.x, point.y, allowDiagonal) { current, neighbor ->
+                pointFilter(current, neighbor) && !pointDistances.containsKey(neighbor)
+            }.forEach {
+                pointDistances[it.value] = distance + 1
+                queue.add(it.value to distance + 1)
+            }
+        }
+
+        return pointDistances
+    }
 
     /**
      * Turn this matrix on it's side, and return the new representation. By transposing, the first row becomes the first column,
@@ -61,6 +94,8 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
         grid.map {
             it[colNum]
         }
+
+    fun pointAt(row: Int, col: Int): Point<T> = Point(row, col, grid[row][col])
 
     override fun iterator() = grid.iterator()
 
