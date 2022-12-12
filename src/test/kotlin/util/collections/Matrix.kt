@@ -66,7 +66,7 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
      * @return a List of Points, from start to end, indicating the steps to take. This will be an empty list of no path can be found from start to end.
      */
     fun findShortestPath(start: Point<T>, end: Point<T>, allowDiagonal: Boolean = false, pointFilter: (currentPoint: Point<T>, neighboringPoint: Point<T>) -> Boolean = { _, _ -> true }) =
-        findAllPaths(end, allowDiagonal, pointFilter).filter { it.key == start }.values.first()
+        findAllPaths(end, allowDiagonal, pointFilter).filter { it.key == start }.ifEmpty { emptyMap() }.values.first()
 
     /**
      * Turn this matrix on it's side, and return the new representation. By transposing, the first row becomes the first column,
