@@ -1,5 +1,6 @@
 package day13
 
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
@@ -35,6 +36,39 @@ class DistressSignalTest : DataFiles() {
     @Order(3)
     fun `Part 2 Sample Input should return 140`() {
         assertEquals(140, sampleSolver.solvePartTwo())
+    }
+
+    @Test
+    @Order(3)
+    fun `Part 2 Sample Input should result in properly sorted packets`() {
+        val expectedPackets = """
+            []
+            [[]]
+            [[[]]]
+            [1,1,3,1,1]
+            [1,1,5,1,1]
+            [[1],[2,3,4]]
+            [1,[2,[3,[4,[5,6,0]]]],8,9]
+            [1,[2,[3,[4,[5,6,7]]]],8,9]
+            [[1],4]
+            [[2]]
+            [3]
+            [[4,4],4,4]
+            [[4,4],4,4,4]
+            [[6]]
+            [7,7,7]
+            [7,7,7,7]
+            [[8,7,6]]
+            [9]
+        """.trimIndent().split("\n").map { Packet(it) }
+
+        val sorted = sampleSolver.sortPacketsForPartTwo()
+
+        assertEquals(expectedPackets.joinToString("\n"), sorted.joinToString("\n"))
+
+        expectedPackets.forEachIndexed { index, packet ->
+            assertEquals(packet, sorted[index], "Packet #${index + 1} does not match")
+        }
     }
 
     @Test
@@ -139,6 +173,8 @@ class DistressSignalTest : DataFiles() {
 }
 
 class Solver(data: List<String>) {
+    private val dividerPacketOne = Packet("[[2]]")
+    private val dividerPacketTwo = Packet("[[6]]")
     private val packets = data.filter { it.isNotBlank() }.map { Packet(it) }
 
     fun solvePartOne(): Int {
@@ -151,30 +187,30 @@ class Solver(data: List<String>) {
         }.sum()
     }
 
-    fun solvePartTwo(): Int {
-        val dividerPacketOne = Packet("[[2]]")
-        val dividerPacketTwo = Packet("[[6]]")
-        val sortedPackets = packets.union(
-            listOf(
-                dividerPacketOne,
-                dividerPacketTwo
-            )
-        ).sorted()
-
-        return sortedPackets.mapIndexed { i, packet ->
+    fun solvePartTwo() =
+        sortPacketsForPartTwo().mapIndexed { i, packet ->
             if (packet == dividerPacketOne || packet == dividerPacketTwo) {
                 i + 1
             } else {
                 0
             }
         }.filter { it > 0 }.reduce { acc, i -> acc * i }
+
+    fun sortPacketsForPartTwo(): List<Packet> {
+        return packets.union(
+            listOf(
+                dividerPacketOne,
+                dividerPacketTwo
+            )
+        ).sorted()
     }
 }
 
-class Packet(input: String) : Comparable<Packet> {
-    val value: JsonArray = Json.parseToJsonElement(input) as JsonArray
+data class Packet(val value: JsonArray) : Comparable<Packet> {
     val size: Int
         get() = value.size
+
+    constructor(input: String) : this(Json.parseToJsonElement(input) as JsonArray)
 
     override fun compareTo(other: Packet): Int = comparePacketValues(this.value, other.value)
 
@@ -232,5 +268,9 @@ class Packet(input: String) : Comparable<Packet> {
         }
 
         return 0
+    }
+
+    override fun toString(): String {
+        return Json.encodeToString(value)
     }
 }
