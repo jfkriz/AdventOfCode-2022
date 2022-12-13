@@ -8,7 +8,6 @@ import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.int
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
@@ -41,7 +40,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(3)
-    @Disabled
     fun `Part 2 Sample Input should result in properly sorted packets`() {
         val expectedPackets = """
             []
@@ -62,15 +60,11 @@ class DistressSignalTest : DataFiles() {
             [7,7,7,7]
             [[8,7,6]]
             [9]
-        """.trimIndent().split("\n").map { Packet(it) }
+        """.trimIndent()
 
         val sorted = sampleSolver.sortPacketsForPartTwo()
 
-        assertEquals(expectedPackets.joinToString("\n"), sorted.joinToString("\n"))
-
-        expectedPackets.forEachIndexed { index, packet ->
-            assertEquals(packet, sorted[index], "Packet #${index + 1} does not match")
-        }
+        assertEquals(expectedPackets, sorted.joinToString("\n"))
     }
 
     @Test
@@ -87,7 +81,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(99)
-    @Disabled
     fun `Packet pair should successfully parse sample 1 - correct order`() {
         val data = """
             [1,1,3,1,1]
@@ -99,7 +92,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(99)
-    @Disabled
     fun `Packet pair should successfully parse sample 2 - correct order`() {
         val data = """
             [[1],[2,3,4]]
@@ -111,7 +103,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(99)
-    @Disabled
     fun `Packet pair should successfully parse sample 3 - incorrect order`() {
         val data = """
             [9]
@@ -123,7 +114,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(99)
-    @Disabled
     fun `Packet pair should successfully parse sample 4 - correct order`() {
         val data = """
             [[4,4],4,4]
@@ -135,7 +125,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(99)
-    @Disabled
     fun `Packet pair should successfully parse sample 5 - incorrect order`() {
         val data = """
             [7,7,7,7]
@@ -147,7 +136,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(99)
-    @Disabled
     fun `Packet pair should successfully parse sample 6 - correct order`() {
         val data = """
             []
@@ -159,7 +147,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(99)
-    @Disabled
     fun `Packet pair should successfully parse sample 7 - incorrect order`() {
         val data = """
             [[[]]]
@@ -171,7 +158,6 @@ class DistressSignalTest : DataFiles() {
 
     @Test
     @Order(99)
-    @Disabled
     fun `Packet pair should successfully parse sample 8 - incorrect order`() {
         val data = """
             [1,[2,[3,[4,[5,6,7]]]],8,9]
@@ -258,12 +244,20 @@ data class Packet(val value: JsonArray) : Comparable<Packet> {
 
             // Need to make the single number on the right into an array and then compare to left
             if (l is JsonArray && r !is JsonArray) {
-                return comparePacketValues(l, buildJsonArray { add(r) })
+                val compare = comparePacketValues(l, buildJsonArray { add(r) })
+                if (compare != 0) {
+                    return compare
+                }
+                continue
             }
 
             // Need to make the single number on the left into an array and then compare to right
             if (r is JsonArray && l !is JsonArray) {
-                return comparePacketValues(buildJsonArray { add(l) }, r)
+                val compare = comparePacketValues(buildJsonArray { add(l) }, r)
+                if (compare != 0) {
+                    return compare
+                }
+                continue
             }
 
             // At this point, both should be arrays
