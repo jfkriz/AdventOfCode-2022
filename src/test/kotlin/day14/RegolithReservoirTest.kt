@@ -50,11 +50,11 @@ class Solver(data: List<String>) {
     private val reservoir = Reservoir(data)
     private val reservoirPartTwo = Reservoir(data, true)
     fun solvePartOne(): Int {
-        return reservoir.dropSandGrains(0 to 500)
+        return reservoir.dropSandGrains(500 to 0)
     }
 
     fun solvePartTwo(): Int {
-        return reservoirPartTwo.dropSandGrains(0 to 500)
+        return reservoirPartTwo.dropSandGrains(500 to 0)
     }
 }
 
@@ -68,7 +68,7 @@ class Reservoir(input: List<String>, private val infiniteFloor: Boolean = false)
     init {
         val instructions = input.map { line ->
             line.split(Regex(" -> ")).map { point ->
-                val (y, x) = point.split(",").map(Integer::parseInt)
+                val (x, y) = point.split(",").map(Integer::parseInt)
                 x to y
             }
         }
@@ -77,8 +77,8 @@ class Reservoir(input: List<String>, private val infiniteFloor: Boolean = false)
         maxX = instructions.flatten().maxOf { it.first }
         minY = instructions.flatten().minOf { it.second }
         maxY = instructions.flatten().maxOf { it.second }
-        val width = maxY + 2
-        val height = maxX + 2
+        val width = maxX + 2
+        val height = maxY + 2
 
         grid = Matrix(width, height, Tile.Open)
 
@@ -87,9 +87,9 @@ class Reservoir(input: List<String>, private val infiniteFloor: Boolean = false)
             // large number for expansion on the right of the grid to hopefully get it working. It
             // did, but ugh... I may come back to this sometime after the holidays.
             grid = grid.expand(right = 1000, fill = Tile.Open).expand(down = 1, fill = Tile.Rock)
-            maxX = grid.height
-            minY = 0
-            maxY = grid.width
+            maxY = grid.height
+            minX = 0
+            maxX = grid.width
         }
 
         instructions.forEach { rock ->
@@ -105,14 +105,14 @@ class Reservoir(input: List<String>, private val infiniteFloor: Boolean = false)
             try {
                 currentGrain = dropSandGrain(dropFrom)
                 if (currentGrain != null) {
-                    grid.setPoint(currentGrain.first, currentGrain.second, Tile.Sand)
+                    grid.setPoint(currentGrain.second, currentGrain.first, Tile.Sand)
                     dropped++
                 } else {
                     if (infiniteFloor) {
                         grid = grid.expand(left = 10, right = 10, fill = Tile.Open)
                         grid.drawLine(grid.height - 1 to 0, grid.height - 1 to grid.width - 1, Tile.Rock)
                         dropFrom = dropFrom.first to dropFrom.second + 10
-                        maxY = grid.width
+                        maxX = grid.width
                         currentGrain = dropFrom
                     }
                 }
@@ -140,11 +140,11 @@ class Reservoir(input: List<String>, private val infiniteFloor: Boolean = false)
 
         while (found) {
             val possibleTiles =
-                grid.getNeighboringPoints(nextXY.first, nextXY.second, includeDiagonal = true) { _, neighbor ->
+                grid.getNeighboringPoints(nextXY.second, nextXY.first, includeDiagonal = true) { _, neighbor ->
                     neighbor.value == Tile.Open &&
-                        neighbor.x <= maxX &&
-                        neighbor.y >= minY &&
-                        neighbor.y <= maxY
+                        neighbor.y <= maxY &&
+                        neighbor.x >= minX &&
+                        neighbor.x <= maxX
                 }.filter {
                     it.key == Direction.Down || it.key == Direction.DownLeft || it.key == Direction.DownRight
                 }
@@ -167,7 +167,7 @@ class Reservoir(input: List<String>, private val infiniteFloor: Boolean = false)
                 throw HoleIsPluggedException(currentXY)
             }
             null
-        } else if (nextXY.first >= maxX || nextXY.second <= minY || nextXY.second >= maxY) {
+        } else if (nextXY.second >= maxY || nextXY.first <= minX || nextXY.first >= maxX) {
             null
         } else {
             nextXY

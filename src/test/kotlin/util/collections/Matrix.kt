@@ -13,14 +13,14 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
 
     fun drawLine(start: Pair<Int, Int>, end: Pair<Int, Int>, fill: T) {
         if (start.first == end.first) {
-            // Horizontal line
-            for (y in start.second toward end.second) {
-                setPoint(start.first, y, fill)
+            // Vertical line
+            for (row in start.second toward end.second) {
+                setPoint(row, start.first, fill)
             }
         } else if (start.second == end.second) {
-            // Vertical line
-            for (x in start.first toward end.first) {
-                setPoint(x, start.second, fill)
+            // Horizontal line
+            for (col in start.first toward end.first) {
+                setPoint(start.second, col, fill)
             }
         } else {
             TODO("Diagonal lines not implemented yet")
@@ -36,10 +36,10 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
      */
     fun getNeighboringPoints(row: Int, col: Int, includeDiagonal: Boolean = false, pointFilter: (currentPoint: Point<T>, neighboringPoint: Point<T>) -> Boolean = { _, _ -> true }): Map<Direction, Point<T>> =
         Direction.values().filter { includeDiagonal || !it.diagonal }.filter {
-            (row + it.yOffset < height) && (row + it.yOffset >= 0) &&
-                (col + it.xOffset < width) && (col + it.xOffset >= 0)
+            (row + it.xOffset < height) && (row + it.xOffset >= 0) &&
+                (col + it.yOffset < width) && (col + it.yOffset >= 0)
         }.associateWith {
-            pointAt(row + it.yOffset, col + it.xOffset)
+            pointAt(row + it.xOffset, col + it.yOffset)
         }.filter {
             pointFilter(pointAt(row, col), it.value)
         }
@@ -61,7 +61,7 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
         while (queue.any()) {
             val (point, path) = queue.remove()
             queue.addAll(
-                getNeighboringPoints(point.x, point.y, allowDiagonal) { current, neighbor ->
+                getNeighboringPoints(point.y, point.x, allowDiagonal) { current, neighbor ->
                     pointFilter(current, neighbor) && !pointDistances.containsKey(neighbor)
                 }.map {
                     val newPath = path.clone().apply {
@@ -167,7 +167,7 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
             it[colNum]
         }
 
-    fun pointAt(row: Int, col: Int): Point<T> = Point(row, col, grid[row][col])
+    fun pointAt(row: Int, col: Int): Point<T> = Point(col, row, grid[row][col])
 
     fun setPoint(row: Int, col: Int, value: T) = grid[row].set(col, value)
 

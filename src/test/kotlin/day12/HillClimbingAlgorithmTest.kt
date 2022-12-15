@@ -52,8 +52,8 @@ class Solver(data: List<String>) {
     init {
         var s = Point(0, 0, 'a'.code)
         var e = Point(0, 0, 'z'.code)
-        data.forEachIndexed { x, row ->
-            row.forEachIndexed { y, ch ->
+        data.forEachIndexed { y, row ->
+            row.forEachIndexed { x, ch ->
                 if (ch == 'S') {
                     s = Point(x, y, 'a'.code)
                 } else if (ch == 'E') {

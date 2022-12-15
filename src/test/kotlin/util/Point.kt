@@ -32,12 +32,12 @@ data class Point<T>(var x: Int, var y: Int, var value: T) {
 }
 
 enum class Direction(val xOffset: Int, val yOffset: Int, val diagonal: Boolean = false) {
-    Up(0, -1),
-    Down(0, 1),
-    Left(-1, 0),
-    Right(1, 0),
+    Up(-1, 0),
+    Down(1, 0),
+    Left(0, -1),
+    Right(0, 1),
     UpLeft(-1, -1, true),
-    DownLeft(-1, 1, true),
-    UpRight(1, -1, true),
+    DownLeft(1, -1, true),
+    UpRight(-1, 1, true),
     DownRight(1, 1, true)
 }
