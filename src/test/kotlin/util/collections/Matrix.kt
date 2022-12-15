@@ -2,11 +2,30 @@ package util.collections
 
 import util.Direction
 import util.Point
+import util.extensions.toward
 import java.util.LinkedList
 import java.util.Queue
 
 open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
-    private var grid = validate(initialContents).map { it }
+    private var grid: MutableList<MutableList<T>> = validate(initialContents).map { it.map { r -> r }.toMutableList() }.toMutableList()
+
+    constructor(width: Int, height: Int, fill: T) : this(List(height) { List(width) { fill } })
+
+    fun drawLine(start: Pair<Int, Int>, end: Pair<Int, Int>, fill: T) {
+        if (start.first == end.first) {
+            // Horizontal line
+            for (y in start.second toward end.second) {
+                setPoint(start.first, y, fill)
+            }
+        } else if (start.second == end.second) {
+            // Vertical line
+            for (x in start.first toward end.first) {
+                setPoint(x, start.second, fill)
+            }
+        } else {
+            TODO("Diagonal lines not implemented yet")
+        }
+    }
 
     /**
      * Get all neighboring points for the given row and column coordinates.
@@ -102,9 +121,30 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
 
         grid = transposed.map {
             @Suppress("UNCHECKED_CAST")
-            it.toList() as List<T>
-        }.toList()
+            it.toMutableList() as MutableList<T>
+        }.toMutableList()
         return this
+    }
+
+    fun expand(left: Int = 0, right: Int = 0, up: Int = 0, down: Int = 0, fill: T): Matrix<T> {
+        var newMatrix = Matrix(grid)
+        if (down > 0) {
+            newMatrix = Matrix(newMatrix.grid + List(down) { List(newMatrix.width) { fill } })
+        }
+
+        if (up > 0) {
+            newMatrix = Matrix(List(up) { List(newMatrix.width) { fill } } + newMatrix.grid)
+        }
+
+        if (left > 0) {
+            newMatrix = Matrix(newMatrix.grid.map { List(left) { fill } + it })
+        }
+
+        if (right > 0) {
+            newMatrix = Matrix(newMatrix.grid.map { it + List(right) { fill } })
+        }
+
+        return newMatrix
     }
 
     private fun validate(contents: List<List<T>>): List<List<T>> {
@@ -129,6 +169,8 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
 
     fun pointAt(row: Int, col: Int): Point<T> = Point(row, col, grid[row][col])
 
+    fun setPoint(row: Int, col: Int, value: T) = grid[row].set(col, value)
+
     override fun iterator() = grid.iterator()
 
     override fun equals(other: Any?): Boolean {
@@ -137,6 +179,10 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
 
     override fun hashCode(): Int {
         return grid.hashCode()
+    }
+
+    override fun toString(): String {
+        return grid.joinToString("\n") { row -> row.joinToString("") }
     }
 }
 
