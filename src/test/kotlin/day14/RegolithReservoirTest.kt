@@ -146,11 +146,10 @@ class Reservoir(input: List<String>, private val infiniteFloor: Boolean = false)
                         neighbor.y >= minY &&
                         neighbor.y <= maxY
                 }.filter {
-                    it.key == Direction.Down || it.key == Direction.DownLeft || it.key == Direction.DownRight ||
-                        it.key == Direction.Left || it.key == Direction.Right
+                    it.key == Direction.Down || it.key == Direction.DownLeft || it.key == Direction.DownRight
                 }
 
-            if (possibleTiles.filterNot { it.key == Direction.Left || it.key == Direction.Right }.isNotEmpty()) {
+            if (possibleTiles.isNotEmpty()) {
                 for (dir in listOf(Direction.Down, Direction.DownLeft, Direction.DownRight)) {
                     if (possibleTiles.containsKey(dir)) {
                         found = true
