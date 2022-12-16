@@ -63,6 +63,8 @@ class SensorMap(data: List<String>) {
     fun findNoCoverageOnRow(row: Int): Int =
         sensors.mapNotNull { it.noCoverageOnRow(row) }.reduce().sumOf { it.last - it.first }
 
+    // This part had me stumped for a while. I got help from:
+    // https://todd.ginsberg.com/post/advent-of-code/2022/day15/
     fun findTuningFrequency(min: Int, max: Int): Long {
         val range = min..max
         val beacon = sensors.firstNotNullOf { sensor ->
