@@ -35,7 +35,34 @@ fun List<String>.padToMaxLength(padChar: Char): List<String> = with(this.maxOf {
     }
 }
 
+/**
+ * A convenience so that you can make a range without having to worry about positive or negative
+ * step. If the starting position were greater than the ending position, you'd normally need to
+ * add a -1 for the step - this takes care of that.
+ */
 infix fun Int.toward(to: Int): IntProgression {
     val step = if (this > to) -1 else 1
     return IntProgression.fromClosedRange(this, to, step)
 }
+
+/**
+ * Take a list of int ranges and reduce them so that any overlapping segments are removed. This would be the
+ * same as creating a [Set] for each range, and then doing a [Set.union] on them. But for really large
+ * ranges, like those found on [Day 15 of the 2022 Advent of Code](https://adventofcode.com/2022/day/15). With
+ * the resulting list of ranges, you can easily count the number of unique positions represented by each.
+ */
+fun List<IntRange>.reduce(): List<IntRange> =
+    if (this.size <= 1) {
+        this
+    } else {
+        val sorted = this.sortedBy { it.first }
+        sorted.drop(1).fold(mutableListOf(sorted.first())) { reduced, range ->
+            val lastRange = reduced.last()
+            if (range.first <= lastRange.last) {
+                reduced[reduced.lastIndex] = (lastRange.first..maxOf(lastRange.last, range.last))
+            } else {
+                reduced.add(range)
+            }
+            reduced
+        }
+    }

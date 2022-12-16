@@ -169,7 +169,42 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
 
     fun pointAt(row: Int, col: Int): Point<T> = Point(col, row, grid[row][col])
 
-    fun setPoint(row: Int, col: Int, value: T) = grid[row].set(col, value)
+    fun setPoint(row: Int, col: Int, value: T) = if (isValidPoint(row, col)) {
+        grid[row][col] = value
+        true
+    } else {
+        false
+    }
+
+    fun isValidPoint(row: Int, col: Int) = (row in 0 until height) && (col in 0..width)
+
+    fun pointsWithinDistance(row: Int, col: Int, distance: Int, includeOffGrid: Boolean = false, fill: T? = null): List<Point<T>> {
+        if (includeOffGrid) {
+            requireNotNull(fill) {
+                "Fill is required if including off-grid points"
+            }
+        }
+
+        val start = pointAt(row, col)
+
+        return (col - distance - 1 toward col + distance).map { y ->
+            (row - distance - 1 toward row + distance).mapNotNull { x ->
+                val next = if (isValidPoint(y, x)) {
+                    pointAt(y, x)
+                } else if (includeOffGrid) {
+                    Point<T>(x, y, fill!!)
+                } else {
+                    null
+                }
+
+                if (next != null && start.distanceFrom(next) <= distance && next != start) {
+                    next
+                } else {
+                    null
+                }
+            }
+        }.flatten()
+    }
 
     override fun iterator() = grid.iterator()
 
