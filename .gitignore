@@ -30,3 +30,4 @@ bin
 !**/dayNN/input.txt
 !**/gradle/**
 *.hprof
+out/**
