@@ -59,7 +59,7 @@ class Solver(data: List<String>) {
     private val chamber = Chamber(data[0])
 
     fun solvePartOne(): Int {
-        return chamber.dropRocks(1038, 7).maxOf { it.y } + 1
+        return chamber.dropRocks(2022, 7).maxOf { it.y } + 1
     }
 
     fun solvePartTwo(): Long {
