@@ -65,25 +65,24 @@ class Solver(data: List<String>) {
         return findAirPockets(cubes)
     }
 
-
     private fun findAirPockets(cubes: Set<SmallCube>): Int {
-        val (minX, maxX) = cubes.map { it.x }.sorted().let { it.first() to it.last()}
-        val (minY, maxY) = cubes.map { it.y }.sorted().let { it.first() to it.last()}
-        val (minZ, maxZ) = cubes.map { it.z }.sorted().let { it.first() to it.last()}
+        val (minX, maxX) = cubes.map { it.x }.sorted().let { it.first() to it.last() }
+        val (minY, maxY) = cubes.map { it.y }.sorted().let { it.first() to it.last() }
+        val (minZ, maxZ) = cubes.map { it.z }.sorted().let { it.first() to it.last() }
         val minAll = listOf(minX, minY, minZ).min() - 1
         val maxAll = listOf(maxX, maxY, maxZ).max() + 1
 
-        val trappedAir = mutableSetOf(SmallCube(minAll , minAll , minAll))
+        val trappedAir = mutableSetOf(SmallCube(minAll, minAll, minAll))
 
-        while(true) {
+        while (true) {
             val water = mutableSetOf<SmallCube>()
-            for(c in trappedAir) {
-                for(n in c.neighbors()) {
-                    if(cubes.contains(n)) {
+            for (c in trappedAir) {
+                for (n in c.neighbors()) {
+                    if (cubes.contains(n)) {
                         continue
                     }
 
-                    if ((minAll .. maxAll).contains(n.x) && (minAll .. maxAll).contains(n.y) && (minAll .. maxAll).contains(n.z)) {
+                    if ((minAll..maxAll).contains(n.x) && (minAll..maxAll).contains(n.y) && (minAll..maxAll).contains(n.z)) {
                         water.add(n)
                     }
                 }
@@ -95,8 +94,8 @@ class Solver(data: List<String>) {
         }
 
         var exposed = 0
-        for(c in cubes) {
-            for(n in c.neighbors()) {
+        for (c in cubes) {
+            for (n in c.neighbors()) {
                 if (trappedAir.contains(n)) {
                     exposed++
                 }
@@ -126,7 +125,7 @@ data class SmallCube(val x: Int, val y: Int, val z: Int) {
     }
 
     fun neighbors(): Set<SmallCube> = setOf(
-        SmallCube(x + 1, y, z), SmallCube(x-1, y, z),
+        SmallCube(x + 1, y, z), SmallCube(x - 1, y, z),
         SmallCube(x, y + 1, z), SmallCube(x, y - 1, z),
         SmallCube(x, y, z + 1), SmallCube(x, y, z - 1)
     )
