@@ -4,7 +4,7 @@ My solutions for the [Advent of Code - 2022](https://adventofcode.com/2022)
 ## 🌟 My Awesome Badges! 🌟
 [![Advent of Code 2022 - Run Tests](https://github.com/jfkriz/AdventOfCode-2022/actions/workflows/RunTests.yaml/badge.svg)](https://github.com/jfkriz/AdventOfCode-2022/actions/workflows/RunTests.yaml)
 
-[![](https://img.shields.io/badge/day%20📅-19-blue)](https://adventofcode.com/2022) [![](https://img.shields.io/badge/stars%20⭐-36-yellow)](https://adventofcode.com/2022) [![](https://img.shields.io/badge/days%20completed-18-red)](https://adventofcode.com/2022)
+[![](https://img.shields.io/badge/day%20📅-20-blue)](https://adventofcode.com/2022) [![](https://img.shields.io/badge/stars%20⭐-38-yellow)](https://adventofcode.com/2022) [![](https://img.shields.io/badge/days%20completed-19-red)](https://adventofcode.com/2022)
 
 ## Usage
 Create each Day's solutions in a structure like this under [src/test/kotlin]():
