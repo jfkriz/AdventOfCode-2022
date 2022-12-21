@@ -93,10 +93,8 @@ class MonkeyCalculator(data: List<String>) {
                 i to diff
             }.sortedBy { it.second }
 
-            iteration.take(2).let {
-                min = min(it[0].first, it[1].first)
-                max = max(it[0].first, it[1].first)
-            }
+            min = min(iteration[0].first, iteration[1].first)
+            max = max(iteration[0].first, iteration[1].first)
         }
     }
 }
