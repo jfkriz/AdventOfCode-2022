@@ -43,6 +43,9 @@ data class Point<T>(var x: Int, var y: Int, var value: T) {
         return (1..steps).scan(this) { last, _ -> Point(last.x + xDelta, last.y + yDelta, fill) }
     }
 
+    val neighbors: Map<Direction, Point<T>>
+        get() = Direction.values().associateWith { Point(x + it.xOffset, y + it.yOffset, value) }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
