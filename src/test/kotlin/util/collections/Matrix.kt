@@ -36,10 +36,10 @@ open class Matrix<T>(initialContents: List<List<T>>) : Iterable<List<T>> {
      */
     fun getNeighboringPoints(row: Int, col: Int, includeDiagonal: Boolean = false, pointFilter: (currentPoint: Point<T>, neighboringPoint: Point<T>) -> Boolean = { _, _ -> true }): Map<Direction, Point<T>> =
         Direction.values().filter { includeDiagonal || !it.diagonal }.filter {
-            (row + it.xOffset < height) && (row + it.xOffset >= 0) &&
-                (col + it.yOffset < width) && (col + it.yOffset >= 0)
+            (row + it.yOffset < height) && (row + it.yOffset >= 0) &&
+                (col + it.xOffset < width) && (col + it.xOffset >= 0)
         }.associateWith {
-            pointAt(row + it.xOffset, col + it.yOffset)
+            pointAt(row + it.yOffset, col + it.xOffset)
         }.filter {
             pointFilter(pointAt(row, col), it.value)
         }
